@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "NeonGate",
+  "version": "0.1.0",
+  "identifier": "app.neongate.client",
+  "build": {
+    "frontendDist": "../html"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "NeonGate",
+        "width": 460,
+        "height": 820,
+        "minWidth": 380,
+        "minHeight": 640,
+        "resizable": true,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: asset:; connect-src 'self' ipc: http://ipc.localhost http://127.0.0.1:9090; media-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "externalBin": ["binaries/sing-box"],
+    "resources": {
+      "binaries/wintun.dll": "wintun.dll"
+    },
+    "windows": {
+      "wix": {
+        "language": "ru-RU"
+      }
+    }
+  }
+}

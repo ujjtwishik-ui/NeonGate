@@ -1,0 +1,15 @@
+{
+  "appId": "app.neongate.client",
+  "appName": "NeonGate",
+  "webDir": "html",
+  "backgroundColor": "#0a0a0a",
+  "android": {
+    "allowMixedContent": true,
+    "backgroundColor": "#0a0a0a"
+  },
+  "plugins": {
+    "CapacitorSQLite": {
+      "androidIsEncryption": false
+    }
+  }
+}

@@ -1,0 +1,31 @@
+[package]
+name = "neongate"
+version = "0.1.0"
+description = "NeonGate — VLESS Reality/Vision client (sing-box)"
+edition = "2021"
+rust-version = "1.77"
+
+[lib]
+name = "neongate_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-shell = "2"
+tauri-plugin-sql = { version = "2", features = ["sqlite"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[target.'cfg(windows)'.dependencies]
+# InternetSetOptionW — уведомляет WinINET/браузеры о смене системного прокси
+windows-sys = { version = "0.59", features = ["Win32_Networking_WinInet"] }
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

@@ -1,0 +1,28 @@
+{
+  "name": "neongate",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NeonGate — VLESS (Reality/Vision) клиент на sing-box: web, Windows (Tauri v2), Android (Capacitor)",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node scripts/test-vless.js",
+    "icons": "tauri icon html/assets/icon.svg",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build --bundles msi",
+    "cap:add": "cap add android",
+    "cap:sync": "cap sync android",
+    "cap:open": "cap open android"
+  },
+  "engines": { "node": ">=22" },
+  "dependencies": {
+    "@capacitor-community/sqlite": "latest",
+    "@capacitor-mlkit/barcode-scanning": "latest",
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.0",
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}

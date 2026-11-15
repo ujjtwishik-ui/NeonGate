@@ -1,0 +1,12 @@
+node_modules/
+src-tauri/target/
+src-tauri/gen/
+src-tauri/binaries/*.exe
+src-tauri/binaries/*.dll
+src-tauri/icons/
+android/
+*.aar
+*.jks
+*.keystore
+local.properties
+.env

@@ -1,0 +1,24 @@
+# Render Blueprint. Вариант 1 (рекомендуется): статический сайт из папки html/.
+services:
+  - type: web
+    name: neongate-web
+    runtime: static
+    staticPublishPath: ./html
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: no-referrer
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+
+# Вариант 2: Node Web Service (Express, server.js) — раскомментируйте и удалите блок выше.
+#  - type: web
+#    name: neongate-web
+#    runtime: node
+#    buildCommand: npm install --omit=dev
+#    startCommand: npm start
+#    healthCheckPath: /healthz

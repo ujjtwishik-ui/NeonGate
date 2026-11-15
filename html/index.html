@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>NeonGate — VLESS Reality клиент</title>
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-state="disconnected">
+  <div class="app">
+
+    <!-- Навигация: сайдбар на десктопе, нижняя панель на телефоне -->
+    <nav class="nav" aria-label="Разделы">
+      <div class="brand"><span class="grad-text">NEON</span>GATE</div>
+      <button class="nav-btn active" data-view="home">
+        <svg viewBox="0 0 24 24"><path d="M12 2v10M5.6 6.4a8 8 0 1 0 12.8 0"/></svg><span>Главная</span>
+      </button>
+      <button class="nav-btn" data-view="keys">
+        <svg viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg><span>Ключи</span>
+      </button>
+      <button class="nav-btn" data-view="logs">
+        <svg viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h10"/></svg><span>Логи</span>
+      </button>
+      <button class="nav-btn" data-view="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg><span>Настройки</span>
+      </button>
+    </nav>
+
+    <main class="main">
+
+      <!-- ===================== ГЛАВНАЯ ===================== -->
+      <section id="view-home" class="view active">
+        <header class="view-head"><h1 class="grad-text">Neon<wbr>Gate</h1><p class="muted">VLESS · XTLS-Reality · Vision</p></header>
+
+        <div class="power-wrap">
+          <button id="powerBtn" class="power" aria-label="Подключиться">
+            <span class="ring"></span>
+            <svg viewBox="0 0 24 24" class="power-icon"><path d="M12 2v10M5.6 6.4a8 8 0 1 0 12.8 0"/></svg>
+          </button>
+          <div id="statusText" class="status">Отключено</div>
+          <div id="statusSub" class="muted small">Выберите ключ и нажмите кнопку</div>
+        </div>
+
+        <div class="card active-chip" id="activeChip">
+          <div><div class="small muted">Активный ключ</div><div id="activeName" class="strong">— не выбран —</div></div>
+          <button class="btn ghost" data-view-go="keys">Сменить</button>
+        </div>
+
+        <div class="seg" id="modeSeg" role="tablist" aria-label="Режим">
+          <button data-mode="tun" class="active">TUN · весь трафик</button>
+          <button data-mode="proxy">Системный прокси</button>
+        </div>
+
+        <div class="stats">
+          <div class="card stat"><div class="small muted">↓ Загрузка</div><div id="stDown" class="num">0 Б/с</div></div>
+          <div class="card stat"><div class="small muted">↑ Отдача</div><div id="stUp" class="num">0 Б/с</div></div>
+          <div class="card stat"><div class="small muted">Сессия</div><div id="stTime" class="num">00:00:00</div></div>
+          <div class="card stat"><div class="small muted">Всего</div><div id="stTotal" class="num">0 Б</div></div>
+        </div>
+
+        <p id="webNote" class="note hidden">
+          Это веб-версия: она не может создать VPN-соединение. Здесь можно управлять ключами и
+          экспортировать конфиг sing-box. Для подключения установите приложение для Windows или Android.
+        </p>
+      </section>
+
+      <!-- ===================== КЛЮЧИ ===================== -->
+      <section id="view-keys" class="view">
+        <header class="view-head"><h1 class="grad-text">Ключи</h1></header>
+        <div class="toolbar">
+          <button class="btn primary" id="btnPaste">Из буфера</button>
+          <button class="btn" id="btnScan">QR-код</button>
+          <button class="btn" id="btnManual">Вручную</button>
+          <button class="btn" id="btnFile">Из файла</button>
+          <input type="file" id="fileInput" accept=".txt,.list,text/plain" hidden>
+        </div>
+        <ul id="keyList" class="list"></ul>
+        <div id="keysEmpty" class="empty hidden">Ключей пока нет. Вставьте ссылку <code>vless://…</code> из буфера обмена или отсканируйте QR.</div>
+        <button class="btn ghost" id="btnExport">Экспорт конфига sing-box (активный ключ)</button>
+      </section>
+
+      <!-- ===================== ЛОГИ ===================== -->
+      <section id="view-logs" class="view">
+        <header class="view-head"><h1 class="grad-text">Логи</h1></header>
+        <div class="toolbar"><button class="btn" id="btnClearLogs">Очистить</button></div>
+        <ul id="logList" class="loglist"></ul>
+      </section>
+
+      <!-- ===================== НАСТРОЙКИ ===================== -->
+      <section id="view-settings" class="view">
+        <header class="view-head"><h1 class="grad-text">Настройки</h1></header>
+        <div class="card form">
+          <label>Порт SOCKS5/HTTP (режим прокси)
+            <input id="setPort" type="number" min="1024" max="65535" inputmode="numeric">
+          </label>
+          <label>DNS-сервер (DoH, через туннель)
+            <input id="setDns" type="text" autocomplete="off" spellcheck="false">
+          </label>
+          <label>Уровень логов ядра
+            <select id="setLog"><option>error</option><option>warn</option><option>info</option><option>debug</option></select>
+          </label>
+          <label class="check"><input id="setLan" type="checkbox"> Локальные адреса в обход туннеля</label>
+          <button class="btn primary" id="btnSaveSettings">Сохранить</button>
+        </div>
+
+        <div class="card form">
+          <div class="strong">Мастер-пароль</div>
+          <p class="muted small">Шифрует ключи в базе (AES-256-GCM). Пароль нигде не хранится — если забудете, ключи придётся импортировать заново.</p>
+          <button class="btn" id="btnMaster">Установить мастер-пароль</button>
+        </div>
+
+        <div class="card small muted" id="aboutBox"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <!-- Диалоги -->
+  <dialog id="dlgManual">
+    <form method="dialog" class="dlg">
+      <h2 class="grad-text">Добавить ключ</h2>
+      <textarea id="manualText" rows="5" placeholder="vless://uuid@host:443?security=reality&…" spellcheck="false"></textarea>
+      <div class="dlg-actions"><button value="cancel" class="btn ghost">Отмена</button><button id="manualOk" value="ok" class="btn primary">Добавить</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="dlgQr">
+    <div class="dlg">
+      <h2 class="grad-text">Сканирование QR</h2>
+      <video id="qrVideo" playsinline muted></video>
+      <div class="dlg-actions"><button id="qrCancel" class="btn ghost">Отмена</button></div>
+    </div>
+  </dialog>
+
+  <dialog id="dlgPass">
+    <form class="dlg" id="passForm">
+      <h2 class="grad-text" id="passTitle">Мастер-пароль</h2>
+      <p class="muted small" id="passHint"></p>
+      <input id="passInput" type="password" autocomplete="off" placeholder="Пароль">
+      <input id="passInput2" type="password" autocomplete="off" placeholder="Повторите пароль" class="hidden">
+      <div id="passErr" class="err small"></div>
+      <div class="dlg-actions">
+        <button type="button" id="passReset" class="btn ghost hidden">Забыл пароль</button>
+        <button type="button" id="passCancel" class="btn ghost">Отмена</button>
+        <button type="submit" class="btn primary">OK</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/platform.js"></script>
+  <script src="js/crypto.js"></script>
+  <script src="js/vless.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/qr.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
